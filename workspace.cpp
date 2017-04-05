@@ -44,8 +44,9 @@ QImage *WorkSpace::GetImage() const
 void WorkSpace::paintEvent(QPaintEvent *event)
 {
     DrawImage(image);
+
     Scissors(image);
-    DrawEraser(image);
+
     PenDraw(image);
     PolygonDraw(image);
     DrawLine(image);
@@ -53,14 +54,16 @@ void WorkSpace::paintEvent(QPaintEvent *event)
     DrawRect(image, rect_points, 0);
     DrawRect(image, ellipse_points, 1);
 
-    QPainter painter(this);
-    SetBrightness();
-    SetLightness();
-
     for(int i=0; i<brush_points.size(); i++)
         Brush(*image, brush_points[i].point.x(), brush_points[i].point.y(),
               qRgb(brush_points[i].color.red(), brush_points[i].color.green(), brush_points[i].color.blue()),
               qRgb(brush_points[i].old_color.red(), brush_points[i].old_color.green(), brush_points[i].old_color.blue()));
+
+    QPainter painter(this);
+    SetBrightness();
+    SetLightness();
+
+    DrawEraser(image);
 
     if(black_white) BlackWhite();
     if(inverse) Inverse();
