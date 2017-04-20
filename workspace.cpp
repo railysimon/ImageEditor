@@ -45,8 +45,6 @@ void WorkSpace::paintEvent(QPaintEvent *event)
 {
     DrawImage(image);
 
-    Scissors(image);
-
     PenDraw(image);
     PolygonDraw(image);
     DrawLine(image);
@@ -54,20 +52,22 @@ void WorkSpace::paintEvent(QPaintEvent *event)
     DrawRect(image, rect_points, 0);
     DrawRect(image, ellipse_points, 1);
 
-    for(int i=0; i<brush_points.size(); i++)
-        Brush(*image, brush_points[i].point.x(), brush_points[i].point.y(),
-              qRgb(brush_points[i].color.red(), brush_points[i].color.green(), brush_points[i].color.blue()),
-              qRgb(brush_points[i].old_color.red(), brush_points[i].old_color.green(), brush_points[i].old_color.blue()));
+//    Scissors(image);
+
+//    for(int i=0; i<brush_points.size(); i++)
+//        Brush(*image, brush_points[i].point.x(), brush_points[i].point.y(),
+//              qRgb(brush_points[i].color.red(), brush_points[i].color.green(), brush_points[i].color.blue()),
+//              qRgb(brush_points[i].old_color.red(), brush_points[i].old_color.green(), brush_points[i].old_color.blue()));
 
     QPainter painter(this);
     SetBrightness();
     SetLightness();
 
-    DrawEraser(image);
+//    DrawEraser(image);
 
     if(black_white) BlackWhite();
     if(inverse) Inverse();
-    if(blur) Blur();
+//    if(blur) Blur();
 
     painter.drawImage(0, 0, *image);
 }
@@ -268,81 +268,81 @@ void WorkSpace::DrawRect(QPaintDevice *device, QVector<ToolProperties> &points, 
     }
 }
 
-void WorkSpace::Brush(QImage &img, int x, int y, QRgb newColor, QRgb oldColor)
-{
-    if (oldColor == newColor) return;
+//void WorkSpace::Brush(QImage &img, int x, int y, QRgb newColor, QRgb oldColor)
+//{
+//    if (oldColor == newColor) return;
 
-            QStack<QPoint> stk;
-            QPoint pt;
+//            QStack<QPoint> stk;
+//            QPoint pt;
 
-            int y1;
-            bool spanLeft, spanRight;
+//            int y1;
+//            bool spanLeft, spanRight;
 
-            stk.push(QPoint(x, y));
+//            stk.push(QPoint(x, y));
 
-            while (!stk.empty())
-            {
-                pt = stk.pop();
-                x = pt.x();
-                y = pt.y();
+//            while (!stk.empty())
+//            {
+//                pt = stk.pop();
+//                x = pt.x();
+//                y = pt.y();
 
-                y1 = y;
-                while (y1 >= 0 && img.pixel(x, y1) == oldColor) y1--;
-                y1++;
+//                y1 = y;
+//                while (y1 >= 0 && img.pixel(x, y1) == oldColor) y1--;
+//                y1++;
 
-                spanLeft = spanRight = false;
+//                spanLeft = spanRight = false;
 
-                while (y1 < img.height() && img.pixel(x, y1) == oldColor)
-                {
-                    img.setPixel(x, y1, newColor);
+//                while (y1 < img.height() && img.pixel(x, y1) == oldColor)
+//                {
+//                    img.setPixel(x, y1, newColor);
 
-                    if (!spanLeft && x > 0 && img.pixel(x-1, y1) == oldColor)
-                    {
-                        stk.push(QPoint(x-1, y1));
-                        spanLeft = true;
-                    }
-                    else if(spanLeft && x > 0 && img.pixel(x-1, y1) != oldColor)
-                    {
-                        spanLeft = false;
-                    }
-                    if (!spanRight && x < (img.width() - 1) && img.pixel(x+1, y1) == oldColor)
-                    {
-                        stk.push(QPoint(x+1, y1));
-                        spanRight = true;
+//                    if (!spanLeft && x > 0 && img.pixel(x-1, y1) == oldColor)
+//                    {
+//                        stk.push(QPoint(x-1, y1));
+//                        spanLeft = true;
+//                    }
+//                    else if(spanLeft && x > 0 && img.pixel(x-1, y1) != oldColor)
+//                    {
+//                        spanLeft = false;
+//                    }
+//                    if (!spanRight && x < (img.width() - 1) && img.pixel(x+1, y1) == oldColor)
+//                    {
+//                        stk.push(QPoint(x+1, y1));
+//                        spanRight = true;
 
-                    }
-                    else if(spanRight && (x < img.width() - 1) && img.pixel(x+1, y1) != oldColor)
-                    {
-                        spanRight = false;
-                    }
+//                    }
+//                    else if(spanRight && (x < img.width() - 1) && img.pixel(x+1, y1) != oldColor)
+//                    {
+//                        spanRight = false;
+//                    }
 
-                    y1++;
-                }
-            }
-}
+//                    y1++;
+//                }
+//            }
+//}
 
-void WorkSpace::DrawEraser(QPaintDevice *device)
-{
-    QPainter painter(device);
-    painter.setBrush(QBrush(Qt::white));
-    painter.setPen(QPen(Qt::NoPen));
+//void WorkSpace::DrawEraser(QPaintDevice *device)
+//{
+//    QPainter painter(device);
+//    painter.setBrush(QBrush(Qt::white));
+//    painter.setPen(QPen(Qt::NoPen));
 
-    for(int i=0; i<eraser_points.size(); i++)
-        painter.drawEllipse(eraser_points[i].point, 20, 20);
-}
+//    for(int i=0; i<eraser_points.size(); i++)
+//        painter.drawEllipse(eraser_points[i].point, 20, 20);
+//}
 
-void WorkSpace::Scissors(QPaintDevice *device)
-{
-    QPainter painter(device);
-    painter.setBrush(QBrush(Qt::white));
-    painter.setPen(QPen(Qt::NoPen));
+//void WorkSpace::Scissors(QPaintDevice *device)
+//{
+//    QPainter painter(device);
+//    painter.setBrush(QBrush(Qt::white));
+//    painter.setPen(QPen(Qt::NoPen));
 
-    for(int i=0; i<scissors_points.size() - 1; i++)
-    {
-        if(i % 2) continue;
-        painter.drawRect(QRect(scissors_points[i].point, scissors_points[i+1].point));
-    }
-}
+//    for(int i=0; i<scissors_points.size() - 1; i++)
+//    {
+//        if(i % 2) continue;
+//        painter.drawRect(QRect(scissors_points[i].point, scissors_points[i+1].point));
+//    }
+//}
 
 void WorkSpace::Rotate()
 {
@@ -362,10 +362,11 @@ bool WorkSpace::isDrawing() const
 
 void WorkSpace::Clear()
 {
-    work_holst = QPixmap("default.png");
+    work_holst = QPixmap(QApplication::applicationDirPath() + "/" + "default.png");
 
     pen_points.clear();
     rect_points.clear();
+    ellipse_points.clear();
     polygon_points.clear();
     line_points.clear();
     spray_points.clear();
@@ -413,7 +414,7 @@ void WorkSpace::SetLineSize(int value)
 
 void WorkSpace::SetValueofBrigthess(int value)
 {
-    brightness_value = value;
+    brightness_value = (-1) * value;
 }
 
 void WorkSpace::SetValueofLightness(int value)
@@ -478,7 +479,7 @@ void WorkSpace::Inverse()
     image->invertPixels(QImage::InvertRgb);
 }
 
-void WorkSpace::Blur()
-{
+//void WorkSpace::Blur()
+//{
 
-}
+//}

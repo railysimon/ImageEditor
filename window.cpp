@@ -25,11 +25,11 @@ void Window::Layout()
     QString top_names[] = {"new", "open", "save", "save as"};
     top_layout->addWidget(toolbar(4, top_names, 30));
 
-    QString settings_name[] = {"scissors", "rotate", "colors"};
+    QString settings_name[] = {"rotate", "colors"};
 
     QHBoxLayout *settings = new QHBoxLayout;
     settings->setAlignment(Qt::AlignRight);
-    settings->addWidget(toolbar(3, settings_name, 30));
+    settings->addWidget(toolbar(2, settings_name, 30));
     settings->addSpacing(20);
 
     top_layout->addLayout(settings);
@@ -39,9 +39,9 @@ void Window::Layout()
 
     QVBoxLayout *left_menu = new QVBoxLayout;
 
-    QString left_names[] = {"pen", "rectangle", "ellipse", "polygon", "line", "spray", "brush",
-                            "eyedropper", "eraser", "cancel"};
-    left_menu->addWidget(toolbar(10, left_names, 30, true, false));
+    QString left_names[] = {"pen", "rectangle", "ellipse", "polygon", "line", "spray",
+                            "eyedropper", "cancel"};
+    left_menu->addWidget(toolbar(8, left_names, 30, true, false));
 
     current_color = new QLabel;
     current_color->setMaximumHeight(40);
@@ -66,8 +66,8 @@ void Window::Layout()
     QVBoxLayout *effects = new QVBoxLayout;
     effects->setAlignment(Qt::AlignCenter);
 
-    QString effects_name[] = {"blur", "black-white", "inverse"};
-    effects->addWidget(toolbar(3, effects_name, 30, true, false));
+    QString effects_name[] = {"black-white", "inverse"};
+    effects->addWidget(toolbar(2, effects_name, 30, true, false));
 
     content->addLayout(effects);
 
@@ -77,7 +77,7 @@ void Window::Layout()
     size_line = slider("Line sizes", 1, 10, 1, 0);
     connect(size_line, SIGNAL(valueChanged(int)), this, SIGNAL(line_size_signal(int)));
 
-    brightness = slider("Brightness", -200, 0, 50, 0);
+    brightness = slider("Brightness", 0, 200, 50, 0);
     connect(brightness, SIGNAL(valueChanged(int)), this, SIGNAL(change_brightness(int)));
 
     lightness = slider("Lightness", 0, 255, 1, 80);
@@ -110,6 +110,36 @@ void Window::Layout()
     main_layout->addLayout(global_settings);
     this->setLayout(main_layout);
     this->setFixedSize(926, 656);
+
+    CreateMenu();
+}
+
+void Window::CreateMenu()
+{
+    QMenuBar *bar = new QMenuBar(this);
+
+    QMenu *file = new QMenu("&File");
+    file->addAction("new", this, SLOT(DifferentEvents()));
+    file->addAction("open", this, SLOT(DifferentEvents()));
+    file->addAction("save", this, SLOT(DifferentEvents()));
+    file->addAction("save as", this, SLOT(DifferentEvents()));
+    bar->addMenu(file);
+
+    QMenu *edit = new QMenu("&Edit");
+    edit->addAction("rotate", this, SLOT(DifferentEvents()));
+    edit->addAction("colors", this, SLOT(DifferentEvents()));
+    bar->addMenu(edit);
+
+    QMenu *tools = new QMenu("&Tools");
+    tools->addAction("pen", this, SLOT(DifferentEvents()));
+    tools->addAction("rectangle", this, SLOT(DifferentEvents()));
+    tools->addAction("ellipse", this, SLOT(DifferentEvents()));
+    tools->addAction("polygon", this, SLOT(DifferentEvents()));
+    tools->addAction("line", this, SLOT(DifferentEvents()));
+    tools->addAction("spray", this, SLOT(DifferentEvents()));
+    tools->addAction("eyedropper", this, SLOT(DifferentEvents()));
+    tools->addAction("cancel", this, SLOT(DifferentEvents()));
+    bar->addMenu(tools);
 }
 
 QToolBar *Window::toolbar(int action_count, QString *names, int icon_size, bool checkable, bool orientation)
@@ -124,7 +154,7 @@ QToolBar *Window::toolbar(int action_count, QString *names, int icon_size, bool 
     QAction *act;
     for(int i=0; i<action_count; i++)
     {
-        act = tools->addAction(QIcon(QPixmap(names[i])), names[i], this, SLOT(DifferentEvents()));
+        act = tools->addAction(QIcon(QPixmap(QApplication::applicationDirPath() + "/" + names[i])), names[i], this, SLOT(DifferentEvents()));
         if(checkable)act->setCheckable(true);
         connect(act, SIGNAL(triggered(bool)), this, SLOT(SetCheckable()));
         tools_array.push_back(act);
@@ -309,7 +339,7 @@ void Window::SetCheckable()
 {
     QAction *action = qobject_cast<QAction*>(sender());
 
-    for(int i=7; i<tools_array.size() - 3; i++)
+    for(int i=6; i<tools_array.size() - 2; i++)
     {
         tools_array[i]->setChecked(false);
         if(action->text() == tools_array[i]->text()) tools_array[i]->setChecked(true);

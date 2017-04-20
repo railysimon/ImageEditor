@@ -1,6 +1,7 @@
 #ifndef WINDOW_H
 #define WINDOW_H
 
+#include <QApplication>
 #include <QDialog>
 #include <QToolBar>
 #include <QVBoxLayout>
@@ -16,6 +17,8 @@
 #include <QKeyEvent>
 #include <QVector>
 #include <QLabel>
+#include <QMenuBar>
+#include <QMenu>
 
 #include "workarea.h"
 #include "workspace.h"
@@ -33,6 +36,7 @@ public:
 
 private:
         void Layout();
+        void CreateMenu();
         QToolBar *toolbar(int action_count, QString *names, int icon_size, bool checkable = false, bool orientation = true);
         QSlider *slider(QString tooltip, int min, int max, int step, int pos);
 

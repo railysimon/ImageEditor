@@ -1,6 +1,7 @@
 #ifndef WORKSPACE_H
 #define WORKSPACE_H
 
+#include <QApplication>
 #include <QDebug>
 #include <QtMath>
 #include <QLabel>
@@ -62,16 +63,16 @@ private:
         void DrawLine(QPaintDevice *device);
         void DrawSpray(QPaintDevice *device);
         void DrawRect(QPaintDevice *device, QVector<ToolProperties> &points, int flag);
-        void Brush(QImage &img, int x, int y, QRgb newColor, QRgb oldColor);
-        void DrawEraser(QPaintDevice *device);
-        void Scissors(QPaintDevice *device);
+//        void Brush(QImage &img, int x, int y, QRgb newColor, QRgb oldColor);
+//        void DrawEraser(QPaintDevice *device);
+//        void Scissors(QPaintDevice *device);
 
         void SetBrightness();
         void SetLightness();
 
         void BlackWhite();
         void Inverse();
-        void Blur();
+//        void Blur();
 
 public:
          bool black_white, blur, inverse;
